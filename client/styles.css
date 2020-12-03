@@ -1,0 +1,180 @@
+body {
+	cursor: url('images/cursor.png'), auto;
+}
+
+button, .nav_item, .nav_item *, .task, .btn-floating, .btn-floating.btn-large, i, main, .side-nav {
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* Date-Time Picker Customization */
+.datepicker-date-display, .datepicker-table td.is-selected { background-color: #005eed !important; }
+.datepicker-footer .confirmation-btns button, .dropdown-content li span { color: #005eed !important }
+.timepicker-digital-display { background-color: #005eed !important; }
+.timepicker-footer .confirmation-btns button { color: #005eed !important }
+.timepicker-tick.active, .timepicker-tick:hover { background-color: #005eed33 !important; }
+.timepicker-canvas line { stroke: #005eed !important }
+.timepicker-canvas-bg, .timepicker-canvas-bearing { fill: #005eed !important }
+.month-prev:focus, .month-next:focus {
+    background-color: #005fed59 !important;
+}
+
+/* label focus color */
+.input-field input[type=text]:focus + label, .materialize-textarea:focus:not([readonly]) + label, .input-field .prefix.active {
+	color: #005eed !important;
+}
+/* label underline focus color */
+.select-wrapper input.select-dropdown:focus { border-bottom: 1px solid #005eed !important }
+input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]),
+.input-field input[type=text]:focus, .materialize-textarea:focus:not([readonly]) {
+	border-bottom: 1px solid #005eed !important;
+	box-shadow: 0 1px 0 0 #005eed !important;
+}
+
+[type="checkbox"]:checked+span:not(.lever):before {
+	border-top: 2px solid transparent !important;
+    border-left: 2px solid transparent !important;
+    border-right: 2px solid #013c8f !important;
+    border-bottom: 2px solid #013c8f !important;
+}
+
+.modal.custom_modal { padding: 1rem !important }
+
+img:hover, svg:hover, .material-icons { cursor: pointer; }
+
+#toast-container {
+	top: auto !important;
+	right: auto !important;
+	bottom: 10%;
+	left:calc(20vw + 3rem);  
+}
+
+/* Side-Nav */
+.side-nav { box-sizing: border-box; height: 100vh; width: 20vw; overflow: auto }
+
+.nav_links { box-sizing: border-box; margin-top: 1rem }
+.nav_item {
+	box-sizing: border-box;
+	display: flex;
+	align-items: bottom;
+	cursor: pointer;
+	padding: 15px 0;
+	padding-left: 15px;
+}
+.nav_item:hover { background-color: white; }
+.material-icons.nav_icon { margin-right: 1rem }
+.material-icons.nav_icon.yellow_icon, .material-icons.yellow_icon { color: #ffcc33 }
+.material-icons.nav_icon.purple_icon, .material-icons.purple_icon { color: #483334 }
+.material-icons.nav_icon.red_icon, .material-icons.red_icon { color: #FF5C5C }
+
+#user_lists { display: none }
+#user_dropdown { width: 18vw }
+#list_chevron { transition: transform 200ms ease-out; }
+
+main {
+	box-sizing: border-box;
+	padding: 2rem;
+	height: 100vh;
+	width: 80vw;
+	background-image: url("/images/task_bg.jpg");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	overflow: hidden;
+	color: white;
+}
+.checkbox input { display: none; }
+
+h5 { letter-spacing: 1px; padding: 0; margin: 0 !important; margin-bottom: 1rem !important; }
+.main_heading_1_container, .main_heading_2_container { margin-top: 1rem; padding-top: 0.7rem }
+
+.task, .note {
+	box-sizing: border-box;
+	background-color: rgba(255, 255, 255, 0.98);
+	margin-bottom: 1rem;
+	padding: 1rem 1.5rem;
+	border-radius: 10px;
+	color: black;
+	display: flex;
+	align-items: center;
+	justify-content: stretch;
+}
+.task:hover { background-color: rgba(250, 250, 250, 0.9) }
+.task.true { text-decoration: line-through }
+
+.task_div { flex: 1; display: flex; justify-content: stretch; align-items: flex-start }
+.task_div_left { display: flex; margin-right: 5px }
+.taskDetails { margin-top: 5px; font-size: smaller; display: flex }
+.middle { flex: 1; cursor: pointer }
+.taskDetails_div { display: flex; align-items: center }
+.taskDetails_div i { font-size: 20px; margin: 0 9px; color: #483334 }
+.taskDescription { display: none }
+.taskDescription.expand { display: block }
+#createTaskForm > div:first-of-type, #updateTaskForm > div:first-of-type { display: flex; justify-content: space-between; align-items: flex-start }
+#createNoteForm > div:first-of-type { display: flex; justify-content: space-between; align-items: flex-start }
+
+span.required { color: #FF5C5C }
+#create_list_form_errors, #create_user_form_errors, #create_task_form_errors, #update_task_form_errors, #create_note_form_errors, #update_note_form_errors,#login_user_form_errors { color: #FF5C5C }
+.modalPickers { display: flex; justify-content: space-between }
+
+.toast { letter-spacing: 0.5px; }
+
+.note_data { flex: 1 }
+.note_data_div { flex: 1; display: flex; align-items: stretch; justify-content: space-between; }
+.display_note_title { font-size: larger; margin-bottom: 1rem }
+.display_note_description { display: none }
+.display_note_description.expand { display: block }
+.note_actions { display: flex; justify-content: flex-end; align-items: center }
+.note_actions_div { margin-right: 1rem }
+
+@media only screen and (max-width: 992px) {
+	main { width: 100vw }
+	h5 { margin-bottom: 10px !important; }
+	/* Show Menu Button */
+	#menu_btn { display: block !important }
+
+	/* Bottom Nav */
+	.bottom_nav { display: flex !important; }
+	.fixed-action-btn.fab { display: none }
+	.fixed-action-btn.bottom_nav_fab { display: block !important; position: relative; right: 0; bottom: 35px }
+	.btn-floating.btn-large.bottom_nav_fab { width: 50px; height: 50px }
+	.btn-floating.btn-large i { line-height: 56px !important; }
+	ul { margin-bottom: -30px !important; display: flex; flex-direction: column; align-items: center }
+	nav i.bottom_nav_fab, nav i.material-icons.bottom_nav_fab { height: 50px !important; line-height: 50px !important; padding: 0 2rem }
+
+	/* Task */
+	.task { align-items: flex-start; }
+	.task_div_left { margin-right: 0; flex-direction: column; }
+	.task_div_left div { margin-bottom: 7px }
+	.star i { margin-right: 8px !important; margin-left: -3px }
+	.taskDetails_mobile {
+		display: flex;
+		flex-direction: column;
+	}
+	.taskTitle { font-size: 1.4rem; }
+	#taskDescription { font-size: 1.2rem; }
+	.taskDetails, .taskDetails div { margin: 5px 0; font-size: 1rem; }
+	.taskDetails_div i { margin-left: 0; }
+	.delete { display: flex; flex-direction: column }
+	.delete i { margin-right: 0px !important; margin-bottom: 1rem; }
+	#createTaskForm div:first-of-type, #updateTaskForm div:first-of-type { align-items: center }
+	.modalPickers { flex-direction: column; margin-top: 2rem; }
+	.modalPickers div { margin-top: 1rem }
+	#toast-container { bottom: 1rem; left: 1rem }
+}
+
+.bottom_nav {
+	display: none;
+	box-sizing: border-box;
+	position: absolute;
+	bottom: 0;
+	padding: 0 2rem;
+	justify-content: space-around;
+	height: 56px !important;
+}
+.fixed-action-btn.bottom_nav_fab { display: none }
+
+.dropdown-content li { display: flex; align-items: center }
+.dropdown-content li a { flex: 1 }
+.dropdown-content i { padding: 0 1rem; display: flex; justify-content: center }

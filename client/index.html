@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Tasks - Notes App</title>
+		<link rel="icon" href="favico.ico" type="image/png" />
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+		/>
+		<link rel="icon" href="images/push_pin_outline.svg" type="image/svg" />
+		<link rel="manifest" href="manifest.json" />
+	</head>
+	<body>
+		<!-- Full Page Loader -->
+		<div
+			id="loading"
+			style="
+				position: absolute;
+				z-index: 1000;
+				width: 100vw;
+				height: 100vh;
+				display: none;
+				align-items: center;
+				justify-content: center;
+				background-color: #f4f4f4df;
+			"
+		>
+			<div class="preloader-wrapper big active">
+				<div class="spinner-layer spinner-blue-only">
+					<div class="circle-clipper left">
+						<div class="circle"></div>
+					</div>
+					<div class="gap-patch">
+						<div class="circle"></div>
+					</div>
+					<div class="circle-clipper right">
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Side Nav -->
+		<div style="display: flex">
+			<div
+				class="hide-on-med-and-down grey lighten-4 side-nav"
+				id="side_nav"
+				style="display: flex; flex-direction: column; justify-content: space-between"
+			>
+				<div>
+					<div
+						class="grey lighten-3 black-text"
+						style="
+							padding: 1rem;
+							padding-left: 1rem;
+							font-size: larger;
+							letter-spacing: 0.5px;
+							color: #483334;
+						"
+					>
+						<div>Tasks and Notes App</div>
+					</div>
+					<div class="nav_links">
+						<div
+							class="nav_item"
+							onclick="window.location.href = './index.html#tasks'; sideNavClose_onClickSideNav(); showTasks();"
+						>
+							<div>
+								<i title="My Day" class="material-icons nav_icon purple_icon">wb_sunny</i>
+							</div>
+							<div>Tasks</div>
+						</div>
+						<div
+							class="nav_item"
+							onclick="window.location.href='./index.html#notes'; showNotes(); sideNavClose_onClickSideNav()"
+						>
+							<div>
+								<i title="Notes" class="material-icons nav_icon yellow_icon">note</i>
+							</div>
+							<div>Notes</div>
+						</div>
+						<div
+							class="nav_item"
+							onclick="window.location='./index.html#important'; showImportant(); sideNavClose_onClickSideNav()"
+						>
+							<div>
+								<i title="Important" class="material-icons nav_icon yellow_icon">star</i>
+							</div>
+							<div>Important</div>
+						</div>
+						<div
+							class="nav_item"
+							style="justify-content: space-between; align-items: flex-start"
+							onclick="toggleLists()"
+						>
+							<div style="display: flex; align-items: flex-start; flex: 6">
+								<div>
+									<i title="All Lists" class="material-icons nav_icon purple_icon"
+										>view_list</i
+									>
+								</div>
+								<div>Lists</div>
+							</div>
+							<div style="display: flex; align-items: flex-end">
+								<div id="list_chevron" style="margin-right: 20px; color: #483334">
+									&#x25BC;
+								</div>
+							</div>
+						</div>
+						<div id="user_lists" style="flex-direction: column"></div>
+					</div>
+				</div>
+				<div style="position: absolute; width: 20vw; bottom: 0">
+					<!-- Dropdown Trigger -->
+					<a
+						id="user_dropdown_trigger"
+						class="dropdown-trigger btn grey lighten-4 black-text"
+						data-target="user_dropdown"
+						style="width: 100%"
+						>Local Account</a
+					>
+
+					<!-- Dropdown Structure -->
+					<ul id="user_dropdown" class="dropdown-content" style="width: 100%"></ul>
+				</div>
+			</div>
+
+			<!-- Main Content -->
+			<main>
+				<!-- Tasks -->
+				<div>
+					<div>
+						<div>
+							<div style="display: flex; align-items: flex-start">
+								<i
+									class="material-icons"
+									style="margin-right: 1rem; display: none"
+									onclick="toggleSideNav()"
+									id="menu_btn"
+									>menu</i
+								>
+								<h5 id="main_heading_1">My Day</h5>
+							</div>
+							<div id="my_day__date" style="font-size: small"></div>
+						</div>
+						<div class="main_heading_1_container" id="main_heading_1_container"></div>
+						<div style="margin-top: 4rem">
+							<h5 id="main_heading_2">All Tasks</h5>
+							<div id="my_day__date"></div>
+						</div>
+						<div class="main_heading_2_container" id="main_heading_2_container"></div>
+					</div>
+				</div>
+			</main>
+		</div>
+
+		<!-- Bottom Bar for Mobile-->
+		<nav class="bottom_nav grey lighten-2">
+			<div onclick="window.location.href = './index.html'">
+				<i class="material-icons bottom_nav_fab" style="color: #5f4a4b">wb_sunny</i>
+			</div>
+			<div class="fixed-action-btn bottom_nav_fab">
+				<a class="btn-floating btn-large" style="background-color: #724232">
+					<i
+						title="Create"
+						id="fab_icon_bottom"
+						class="large material-icons"
+						onclick="fab(this)"
+						style="padding: 0"
+						>add</i
+					>
+				</a>
+				<ul onclick="fab(document.getElementById('fab_icon_bottom'));">
+					<li>
+						<a class="btn-floating"
+							><i
+								title="Add Task"
+								onclick="createTaskModalInstance.open()"
+								class="material-icons blue accent-4"
+								style="background-color: #b86800 !important"
+								>add_task</i
+							></a
+						>
+					</li>
+					<li>
+						<a class="btn-floating"
+							><i
+								title="Add Note"
+								onclick="createNoteModalInstance.open()"
+								class="material-icons blue accent-4"
+								style="background-color: #b86800 !important"
+								>note</i
+							></a
+						>
+					</li>
+					<li>
+						<a class="btn-floating"
+							><i
+								title="Add List"
+								onclick="createListModalInstance.open()"
+								class="material-icons blue accent-4"
+								style="background-color: #b86800 !important"
+								>list</i
+							></a
+						>
+					</li>
+				</ul>
+			</div>
+			<div onclick="window.location.href = './index.html#notes'; showNotes()">
+				<i class="material-icons bottom_nav_fab" style="color: #483334">note</i>
+			</div>
+		</nav>
+
+		<!-- FAB -->
+		<div class="fixed-action-btn fab">
+			<a class="btn-floating btn-large" id="fab_icon_wrapper" style="background-color: #724232">
+				<i title="Create" id="fab_icon" class="large material-icons" onclick="fab(this)">add</i>
+			</a>
+			<ul onclick="fab(document.getElementById('fab_icon'));">
+				<li>
+					<a class="btn-floating"
+						><i
+							title="Add Task"
+							onclick="fab(document.getElementById('fab_icon'));createTaskModalInstance.open()"
+							class="material-icons blue accent-4"
+							style="background-color: #b86800 !important"
+							>add_task</i
+						></a
+					>
+				</li>
+				<li>
+					<a class="btn-floating"
+						><i
+							title="Add Note"
+							onclick="fab(document.getElementById('fab_icon')); createNoteModalInstance.open()"
+							class="material-icons blue accent-4"
+							style="background-color: #b86800 !important"
+							>note</i
+						></a
+					>
+				</li>
+				<li>
+					<a class="btn-floating"
+						><i
+							title="Add List"
+							onclick="fab(document.getElementById('fab_icon'));createListModalInstance.open()"
+							class="material-icons blue accent-4"
+							style="background-color: #b86800 !important"
+							>list</i
+						></a
+					>
+				</li>
+				<li>
+					<a class="btn-floating"
+						><i
+							title="Backup"
+							onclick="userBackup()"
+							class="material-icons blue accent-4"
+							style="background-color: #b86800 !important"
+							>arrow_circle_up</i
+						></a
+					>
+				</li>
+			</ul>
+		</div>
+
+		<!-- Modals -->
+		<div id="createListModal" class="modal custom_modal">
+			<div class="modal-content">
+				<h4>Create List</h4>
+				<div class="input-field" style="margin-top: 4rem">
+					<input
+						placeholder=""
+						id="create_list_name"
+						type="text"
+						data-length="20"
+						maxlength="20"
+					/>
+					<label for="create_list_name">List Name</label>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a
+					class="modal-close waves-effect waves-blue btn-flat black-text"
+					style="margin-right: 0.5rem"
+					>Cancel</a
+				>
+				<a class="waves-effect waves-blue blue accent-4 btn" onclick="addNewList()">Add List</a>
+			</div>
+		</div>
+
+		<div id="createUserModal" class="modal custom_modal">
+			<div class="modal-content">
+				<h4>Create User</h4>
+				<div class="input-field" style="margin-top: 4rem">
+					<input placeholder="" required id="create_user_name" type="text" data-length="15" />
+					<label for="create_user_name">User Name</label>
+				</div>
+				<div class="input-field" style="margin-top: 4rem">
+					<input
+						placeholder=""
+						required
+						id="create_user_pw"
+						type="password"
+						data-length="25"
+					/>
+					<label for="create_user_pw">Password</label>
+				</div>
+			</div>
+			<div class="margin-top: 2rem" id="create_user_form_errors"></div>
+			<div class="modal-footer">
+				<a
+					class="modal-close waves-effect waves-blue btn-flat black-text"
+					style="margin-right: 0.5rem"
+					onclick="createUserCleanup()"
+					>Cancel</a
+				>
+				<a class="waves-effect waves-blue blue accent-4 btn" onclick="addNewUser()">Add User</a>
+			</div>
+		</div>
+
+		<div id="loginUserModal" class="modal custom_modal">
+			<div class="modal-content">
+				<h4>Login</h4>
+				<div class="input-field" style="margin-top: 4rem">
+					<input placeholder="" required id="login_user_name" type="text" data-length="15" />
+					<label for="login_user_name">User Name</label>
+				</div>
+				<div class="input-field" style="margin-top: 4rem">
+					<input placeholder="" required id="login_user_pw" type="text" data-length="15" />
+					<label for="login_user_pw">Password</label>
+				</div>
+			</div>
+			<div class="margin-top: 2rem" id="login_user_form_errors"></div>
+			<div class="modal-footer">
+				<a
+					class="modal-close waves-effect waves-blue btn-flat black-text"
+					style="margin-right: 0.5rem"
+					onclick="loginUserCleanup()"
+					>Cancel</a
+				>
+				<a class="waves-effect waves-blue blue accent-4 btn" onclick="loginUser()">Login</a>
+			</div>
+		</div>
+
+		<div id="createTaskModal" class="modal custom_modal">
+			<form id="createTaskForm" class="modal-content">
+				<div>
+					<h4>Create Task</h4>
+					<div>
+						<i
+							title="Not Important"
+							class="material-icons nav_icon"
+							id="create_task_important"
+							title="Important"
+							style="color: #ffcc33"
+							onclick="updateCreateTaskImportant(this)"
+							>star_outline</i
+						>
+					</div>
+				</div>
+				<div class="input-field" style="flex: 9">
+					<input
+						id="create_task_title"
+						type="text"
+						required=""
+						aria-required="true"
+						data-length="35"
+						maxlength="35"
+					/>
+					<label for="create_task_title">Task Title <span class="required">*</span></label>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<input id="create_task_description" type="text" data-length="35" maxlength="35" />
+					<label for="create_task_description">Task Description</label>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<select id="create_task_listID" name="create_task_listID"></select>
+					<label>Select List <span class="required">*</span></label>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<input
+						type="text"
+						id="create_task_due_date"
+						class="datepicker"
+						required=""
+						aria-required="true"
+						pattern="[0-3][0-9]-[0-1][0-9]-[0-2][0][0-3][0-9]"
+						placeholder="dd-mm-yyyy"
+						readonly
+					/>
+					<label for="create_task_due_date">Due Date <span class="required">*</span></label>
+				</div>
+				<div class="modalPickers">
+					<div class="input-field" style="flex: 2">
+						<i title="Reminder Date" class="material-icons prefix">today</i>
+						<input
+							type="text"
+							id="create_task_reminder_date"
+							class="datepicker"
+							required=""
+							aria-required="true"
+							pattern="[0-3][0-9]-[0-1][0-9]-[0-2][0][0-3][0-9]"
+							placeholder="dd-mm-yyyy"
+							readonly
+						/>
+						<label for="create_task_reminder_date"
+							>Reminder Date <span class="required">*</span></label
+						>
+					</div>
+					<div style="flex: 1"></div>
+					<div class="input-field" style="flex: 2">
+						<i title="Reminder Time" class="material-icons prefix">insert_invitation</i>
+						<input
+							type="text"
+							id="create_task_reminder_time"
+							class="timepicker"
+							required=""
+							aria-required="true"
+							pattern="[0-2][0-9]:[0-6][0-9]"
+							placeholder="hh:mm"
+							readonly
+						/>
+						<label for="create_task_reminder_time"
+							>Reminder Time <span class="required">*</span></label
+						>
+					</div>
+				</div>
+				<div class="margin-top: 2rem" id="create_task_form_errors"></div>
+			</form>
+			<div class="modal-footer">
+				<button
+					class="modal-close waves-effect waves-blue btn-flat black-text"
+					style="margin-right: 0.5rem"
+					onclick="addNewTaskCleanup()"
+				>
+					Cancel
+				</button>
+				<button class="waves-effect waves-blue blue accent-4 btn" onclick="addNewTask()">
+					Add Task
+				</button>
+			</div>
+		</div>
+
+		<div id="updateTaskModal" class="modal custom_modal">
+			<form id="updateTaskForm" class="modal-content">
+				<input type="text" id="update_task_id" hidden readonly />
+				<input type="text" id="update_task_createdAt" hidden readonly />
+				<input type="text" id="update_task_completed" hidden readonly />
+				<div>
+					<h4>Update Task</h4>
+					<div>
+						<i
+							title="Not Important"
+							class="material-icons nav_icon"
+							id="update_task_important"
+							title="Important"
+							style="color: #ffcc33"
+							onclick="updateCreateTaskImportant(this)"
+							>star_outline</i
+						>
+					</div>
+				</div>
+				<div class="input-field" style="flex: 9; margin-top: 2rem">
+					<input id="update_task_title" type="text" required data-length="35" maxlength="35" />
+					<label for="update_task_title">Task Title <span class="required">*</span></label>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<input id="update_task_description" type="text" data-length="35" maxlength="35" />
+					<label for="update_task_description">Task Description</label>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<select id="update_task_listID"></select>
+					<label>Select List <span class="required">*</span></label>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<input
+						type="text"
+						id="update_task_due_date"
+						class="datepicker"
+						required=""
+						aria-required="true"
+						pattern="[0-3][0-9]-[0-1][0-9]-[0-2][0][0-3][0-9]"
+						readonly
+					/>
+					<label for="update_task_due_date">Due Date <span class="required">*</span></label>
+				</div>
+				<div class="modalPickers">
+					<div class="input-field" style="flex: 2">
+						<i title="Reminder Date" class="material-icons prefix">today</i>
+						<input
+							type="text"
+							id="update_task_reminder_date"
+							class="datepicker"
+							required=""
+							aria-required="true"
+							pattern="[0-3][0-9]-[0-1][0-9]-[0-2][0][0-3][0-9]"
+							readonly
+						/>
+						<label for="update_task_reminder_date"
+							>Reminder Date <span class="required">*</span></label
+						>
+					</div>
+					<div style="flex: 1"></div>
+					<div class="input-field" style="flex: 2">
+						<i title="Reminder Time" class="material-icons prefix">insert_invitation</i>
+						<input
+							type="text"
+							id="update_task_reminder_time"
+							class="timepicker"
+							required
+							readonly
+						/>
+						<label for="update_task_reminder_time"
+							>Reminder Time <span class="required">*</span></label
+						>
+					</div>
+				</div>
+				<div class="margin-top: 2rem" id="update_task_form_errors"></div>
+			</form>
+			<div class="modal-footer">
+				<button
+					class="modal-close waves-effect waves-blue btn-flat black-text"
+					style="margin-right: 0.5rem"
+				>
+					Cancel
+				</button>
+				<button class="waves-effect waves-blue blue accent-4 btn" onclick="updateTaskDetails()">
+					Update Task
+				</button>
+			</div>
+		</div>
+
+		<div id="taskCompleteModal" class="modal custom_modal">
+			<div class="modal-content">
+				<h4 id="taskCompleteModalHeading_Reminder" style="margin-bottom: 2rem">Reminder</h4>
+				<h4 id="taskCompleteModalHeading_TimeUp">Time Up!</h4>
+				<p id="taskCompleteModalTaskTitle"></p>
+				<input id="taskCompleteModalTaskID" type="text" hidden />
+				<div class="switch">
+					<label>
+						Not Complete
+						<input id="taskCompleteAfterDueDateModal" type="checkbox" />
+						<span class="lever"></span>
+						Complete
+					</label>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="waves-effect waves-blue blue accent-4 btn"
+					onclick="updateTaskViaModal()"
+				>
+					Continue
+				</button>
+			</div>
+		</div>
+
+		<div id="createNoteModal" class="modal custom_modal">
+			<form id="createNoteForm" class="modal-content">
+				<div>
+					<h4 style="margin-bottom: 4rem">Create Note</h4>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<input
+						id="createNoteModal_title"
+						type="text"
+						required
+						data-length="35"
+						maxlength="35"
+					/>
+					<label for="createNoteModal_title">Title<span class="required">*</span></label>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<textarea
+						id="createNoteModal_description"
+						class="materialize-textarea"
+						maxlength="500"
+						data-length="500"
+					></textarea>
+					<label for="createNoteModal_description">Description</label>
+				</div>
+				<div class="margin-top: 2rem" id="create_note_form_errors"></div>
+			</form>
+			<div class="modal-footer">
+				<button
+					class="modal-close waves-effect waves-blue btn-flat black-text"
+					onclick="createNewNoteCleanup()"
+					style="margin-right: 0.5rem"
+				>
+					Cancel
+				</button>
+				<button class="waves-effect waves-blue blue accent-4 btn" onclick="addNewNote()">
+					Continue
+				</button>
+			</div>
+		</div>
+
+		<div id="updateNoteModal" class="modal custom_modal">
+			<form id="updateNoteForm" class="modal-content">
+				<input type="text" id="update_note_id" hidden readonly />
+				<input type="text" id="update_note_pinned" hidden readonly />
+				<input type="text" id="update_note_createdAt" hidden readonly />
+				<div>
+					<h4 style="margin-bottom: 4rem">Edit Note</h4>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<input
+						id="updateNoteModal_title"
+						type="text"
+						required
+						data-length="35"
+						maxlength="35"
+					/>
+					<label for="updateNoteModal_title">Title<span class="required">*</span></label>
+				</div>
+				<div class="input-field" style="margin-top: 2rem">
+					<textarea
+						id="updateNoteModal_description"
+						class="materialize-textarea"
+						maxlength="500"
+						data-length="500"
+					></textarea>
+					<label for="updateNoteModal_description">Description</label>
+				</div>
+				<div class="margin-top: 2rem" id="update_note_form_errors"></div>
+			</form>
+			<div class="modal-footer">
+				<button
+					class="modal-close waves-effect waves-blue btn-flat black-text"
+					style="margin-right: 0.5rem"
+				>
+					Cancel
+				</button>
+				<button class="waves-effect waves-blue blue accent-4 btn" onclick="updateNoteDetails()">
+					Continue
+				</button>
+			</div>
+		</div>
+
+		<script>
+			// Global Variables
+			var currentUserName = 'Admin',
+				currentUserID = -1,
+				dbPromise,
+				db,
+				users = [],
+				allUserNotes = [],
+				userNotes = [],
+				pinnedNotes = [],
+				userTasks = [],
+				userLists = [],
+				todayUserTasks = [],
+				allUserTasks = [],
+				taskCompleteModalInstance,
+				loading = false;
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+		<script src="/services.js"></script>
+		<script>
+			// UI JS
+			(function updateDate() {
+				var d = new Date();
+				var days = [
+					'Sunday',
+					'Monday',
+					'Tuesday',
+					'Wednesday',
+					'Thursday',
+					'Friday',
+					'Saturday',
+				];
+				var months = [
+					'January',
+					'February',
+					'March',
+					'April',
+					'May',
+					'June',
+					'July',
+					'August',
+					'September',
+					'October',
+					'November',
+					'December',
+				];
+				document.getElementById('my_day__date').textContent = `${
+					days[d.getDay()]
+				}, ${d.getDate()} ${months[d.getMonth()]}`;
+			})();
+
+			// SideNav
+			if (window.innerWidth < 960) {
+				document.getElementById('side_nav').classList.add('sidenav');
+				// SideNav
+				var elem = document.querySelector('.sidenav');
+				if (!sideNavInstance)
+					sideNavInstance = M.Sidenav.init(elem, { onCloseEnd: toggleSideNav });
+			} else {
+				if (sideNavInstance) sideNavInstance.destroy();
+				sideNavInstance = null;
+				document.getElementById('side_nav').classList.remove('sidenav');
+				if (!document.getElementById('side_nav').classList.contains('hide-on-med-and-down'))
+					document.getElementById('side_nav').classList.add('hide-on-med-and-down');
+			}
+
+			window.addEventListener('resize', function () {
+				if (window.innerWidth < 960) {
+					document.getElementById('side_nav').classList.add('sidenav');
+					// SideNav
+					var elem = document.querySelector('.sidenav');
+					if (!sideNavInstance)
+						sideNavInstance = M.Sidenav.init(elem, { onCloseEnd: toggleSideNav });
+				} else {
+					if (sideNavInstance) sideNavInstance.destroy();
+					sideNavInstance = null;
+					document.getElementById('side_nav').classList.remove('sidenav');
+					if (!document.getElementById('side_nav').classList.contains('hide-on-med-and-down'))
+						document.getElementById('side_nav').classList.add('hide-on-med-and-down');
+				}
+			});
+
+			function toggleSideNav() {
+				if (
+					sideNavInstance &&
+					document.getElementById('side_nav').classList.contains('hide-on-med-and-down')
+				) {
+					sideNavInstance.open();
+					document.getElementById('side_nav').classList.remove('hide-on-med-and-down');
+				} else if (sideNavInstance) {
+					sideNavInstance.close();
+					document.getElementById('side_nav').classList.add('hide-on-med-and-down');
+				}
+			}
+
+			var showList = false;
+			function toggleLists() {
+				// Check if we have any lists and then only allow
+				if (!showList) {
+					document.getElementById('list_chevron').style.transform = 'rotate(180deg)';
+					document.getElementById('user_lists').style.display = 'flex';
+				} else {
+					document.getElementById('user_lists').style.display = 'none';
+					document.getElementById('list_chevron').style.transform = 'rotate(0deg)';
+				}
+				showList = !showList;
+			}
+
+			// document.addEventListener( "contextmenu", function(e) { e.preventDefault() });
+
+			function fab(_this) {
+				if (_this.innerHTML == 'add') {
+					_this.innerHTML = 'remove';
+				} else _this.innerHTML = 'add';
+			}
+
+			//Materialize.css Initializations
+			var createListModalInstance,
+				createUserModalInstance,
+				createTaskModalInstance,
+				updateTaskModalInstance,
+				sideNavInstance,
+				loginUserModalInstance,
+				createNoteModalInstance,
+				updateNoteModalInstance;
+			document.addEventListener('DOMContentLoaded', function () {
+				// Dropdowns
+				var elems = document.querySelectorAll('.dropdown-trigger');
+				instances = M.Dropdown.init(elems, { constrainWidth: false, coverTrigger: false });
+
+				// FABs
+				elems = document.querySelectorAll('.fixed-action-btn');
+				instances = M.FloatingActionButton.init(elems, { hoverEnabled: false });
+
+				// Date Picker
+				elems = document.querySelectorAll('.datepicker');
+				instances = M.Datepicker.init(elems, {
+					format: 'dd-mm-yyyy',
+					minDate: new Date(),
+				});
+
+				// Time Picker
+				elems = document.querySelectorAll('.timepicker');
+				instances = M.Timepicker.init(elems, { twelveHour: false });
+
+				// Input - Char Count
+				M.CharacterCounter.init(document.querySelector('#create_user_name'));
+				M.CharacterCounter.init(document.querySelector('#create_list_name'));
+				M.CharacterCounter.init(document.querySelector('#create_task_title'));
+				M.CharacterCounter.init(document.querySelector('#update_task_title'));
+				M.CharacterCounter.init(document.querySelector('#create_task_description'));
+				M.CharacterCounter.init(document.querySelector('#update_task_description'));
+				M.CharacterCounter.init(document.querySelector('#createNoteModal_title'));
+				M.CharacterCounter.init(document.querySelector('#createNoteModal_description'));
+
+				// Select element - Initialize after getUserLists()
+				// elems = document.querySelectorAll('select');
+				// instances = M.FormSelect.init(elems, {});
+
+				// Modals
+				var createListModal = document.querySelector('#createListModal');
+				createListModalInstance = M.Modal.init(createListModal, { dismissible: false });
+				var createUserModal = document.querySelector('#createUserModal');
+				createUserModalInstance = M.Modal.init(createUserModal, { dismissible: false });
+				var createTaskModal = document.querySelector('#createTaskModal');
+				createTaskModalInstance = M.Modal.init(createTaskModal, { dismissible: false });
+				var updateTaskModal = document.querySelector('#updateTaskModal');
+				updateTaskModalInstance = M.Modal.init(updateTaskModal, { dismissible: false });
+				var createNoteModal = document.querySelector('#createNoteModal');
+				createNoteModalInstance = M.Modal.init(createNoteModal, { dismissible: false });
+				var updateNoteModal = document.querySelector('#updateNoteModal');
+				updateNoteModalInstance = M.Modal.init(updateNoteModal, { dismissible: false });
+				var loginUserModal = document.querySelector('#loginUserModal');
+				loginUserModalInstance = M.Modal.init(loginUserModal, { dismissible: false });
+			});
+
+			// IndexedDB Related Functions
+			// function fetchUser(){
+			// 	var userModal_name = document.getElementById("userModal_name").value
+
+			// 	var tx = db.transaction('users', 'readonly');
+			// 	var store = tx.objectStore('users');
+
+			// 	var req = store.openCursor();
+
+			// 	req.onsuccess = function(event){
+			// 		let cursor = event.target.result;
+			// 		if (cursor != null) {
+			// 			if(cursor.value.name.toLowerCase() === userModal_name.toLowerCase()){
+			// 				currentUserName = cursor.value.name
+			// 				currentUserID = cursor.value.id
+			// 				localStorage.setItem("userid", cursor.value.id);
+			// 				localStorage.setItem("username", cursor.value.name);
+			// 				userLoginModalInstance.close()
+			// 				getUsers()
+			// 			} else cursor.continue();
+			// 		} else {
+			// 			if(currentUserName === "Admin" && currentUserID === -1) _fetchUser(userModal_name)
+			// 		}
+			// 	}
+			// 	req.onerror = function(event){
+			// 		alert("Couldn't fetch useres. Check console for more details");
+			// 		console.error("error logging in user " + event.target.errorCode);
+			// 	}
+			// }
+
+			// function _fetchUser(userModal_name){
+			// 	addUser(userModal_name, true)
+			// }
+
+			// function switchUser(cursor_value){
+			// 	currentUserID = cursor_value.id
+			// 	currentUserName = cursor_value.name
+			// 	document.getElementById("user_dropdown_trigger").innerText = currentUserName
+			// 	localStorage.setItem("userid", cursor_value.id);
+			// 	localStorage.setItem("username", cursor_value.name);
+			// 	getUserLists()
+			// }
+
+			function addNewList() {
+				addList({
+					userID: parseInt(currentUserID),
+					listTitle: document.getElementById('create_list_name').value,
+				});
+				createListModalInstance.close();
+				document.getElementById('create_list_name').value = '';
+			}
+
+			function addNewUser() {
+				if (document.getElementById('create_user_form_errors').textContent == '') {
+					var name = document.getElementById('create_user_name').value;
+					var pw = document.getElementById('create_user_pw').value;
+					addUser(name, true, pw);
+					createUserModalInstance.close();
+					document.getElementById('create_user_name').value = '';
+				} else {
+					document.getElementById('create_user_form_errors').textContent =
+						'Please enter valid details';
+				}
+			}
+
+			function loginUser() {
+				if (
+					document.getElementById('login_user_name').value == '' ||
+					document.getElementById('login_user_pw').value == ''
+				) {
+					document.getElementById('login_user_form_errors').textContent =
+						'Please fill all valid details';
+				} else {
+					const username = document.getElementById('login_user_name').value;
+					const pw = document.getElementById('login_user_pw').value;
+					userSync({ username: username, password: pw });
+					loginUserModalInstance.close();
+					document.getElementById('login_user_name').value == '';
+					document.getElementById('login_user_pw').value == '';
+				}
+			}
+
+			function loginUserCleanup() {
+				document.getElementById('login_user_name').value = '';
+				document.getElementById('login_user_pw').value = '';
+				document.getElementById('login_user_form_errors').textContent = '';
+			}
+
+			function createUserCleanup() {
+				document.getElementById('create_user_name').value = '';
+				document.getElementById('create_user_pw').value = '';
+				document.getElementById('create_user_form_errors').textContent = '';
+			}
+
+			function addNewTask() {
+				var task = {
+					taskImportant:
+						document.getElementById('create_task_important').innerHTML == 'star'
+							? true
+							: false,
+					taskTitle: document.getElementById('create_task_title').value,
+					taskDescription: document.getElementById('create_task_description').value,
+					taskListID: parseInt(document.getElementById('create_task_listID').value),
+					taskDueDate: document.getElementById('create_task_due_date').value,
+					taskReminderDate: document.getElementById('create_task_reminder_date').value,
+					taskReminderTime: document.getElementById('create_task_reminder_time').value,
+				};
+
+				if (
+					isNaN(task.taskListID) ||
+					document.getElementById('create_task_due_date').value == '' ||
+					document.getElementById('create_task_reminder_date').value == '' ||
+					document.getElementById('create_task_reminder_time').value == ''
+				) {
+					document.getElementById('create_task_form_errors').textContent =
+						'Please Fill all Valid Details';
+				} else {
+					createTaskModalInstance.close();
+					addNewTaskCleanup();
+					addTask(task);
+				}
+			}
+			function addNewTaskCleanup() {
+				document.getElementById('create_task_title').value = '';
+				document.getElementById('create_task_description').value = '';
+				document.getElementById('create_task_listID').value = '';
+				elems = document.querySelectorAll('select');
+				instances = M.FormSelect.init(elems, {});
+				document.getElementById('create_task_due_date').value = '';
+				document.getElementById('create_task_reminder_date').value = '';
+				document.getElementById('create_task_reminder_time').value = '';
+				document.getElementById('create_task_important').value = '';
+			}
+
+			function updateCreateTaskImportant(_this) {
+				if (_this.innerHTML == 'star') _this.innerHTML = 'star_outline';
+				else _this.innerHTML = 'star';
+			}
+
+			function updateTaskUI(cursor_value) {
+				document.getElementById('update_task_id').value = cursor_value.id;
+				// Get Latest Updates
+				var tx = db.transaction('tasks', 'readonly');
+				var store = tx.objectStore('tasks');
+				let req = store.get(cursor_value.id);
+
+				req.onsuccess = function (val) {
+					document.getElementById('update_task_createdAt').value = val.target.result.created;
+					document.getElementById('update_task_completed').value = val.target.result.completed;
+					document.getElementById('update_task_important').innerHTML =
+						val.target.result.important === true ? 'star' : 'star_outline';
+					document.getElementById('update_task_title').value = val.target.result.title;
+					document.getElementById('update_task_description').value =
+						val.target.result.description;
+					document.getElementById('update_task_listID').value = val.target.result.taskListID;
+					document.getElementById('update_task_due_date').value = val.target.result.dueDate;
+					document.getElementById('update_task_reminder_date').value =
+						val.target.result.reminderDate;
+					document.getElementById('update_task_reminder_time').value =
+						val.target.result.reminderTime;
+					updateTaskModalInstance.open();
+					M.updateTextFields();
+					elems = document.querySelectorAll('select');
+					instances = M.FormSelect.init(elems, {});
+				};
+				tx.onerror = function (event) {
+					alert("Couldn't read Data. Check console for more details");
+					console.error('error reading task ' + event.target.errorCode);
+				};
+			}
+
+			function expandDescription(_this) {
+				if (_this.classList.contains('expand')) _this.classList.remove('expand');
+				else _this.classList.add('expand');
+			}
+
+			function showImportant() {
+				document.getElementById('main_heading_1').textContent = 'My Day';
+				document.getElementById('main_heading_2').textContent = 'All Tasks';
+				getUserTasks(true);
+			}
+			function filter_list(cursor_value) {
+				window.location.href = `./index.html#L~${cursor_value.id}`;
+				getUserTasks(false, cursor_value.id);
+			}
+
+			function addNewNote() {
+				var note = {
+					noteTitle: document.getElementById('createNoteModal_title').value,
+					noteDescription: document.getElementById('createNoteModal_description').value,
+					notePinned: false,
+				};
+
+				if (note.noteTitle == '' || !note.noteTitle)
+					document.getElementById('create_note_form_errors').textContent =
+						'Please fill all valid details';
+				else {
+					createNoteModalInstance.close();
+					createNewNoteCleanup();
+					addNote(note);
+				}
+			}
+			function createNewNoteCleanup() {
+				document.getElementById('createNoteModal_title').value = '';
+				document.getElementById('createNoteModal_description').value = '';
+				document.getElementById('create_note_form_errors').textContent = '';
+			}
+
+			function showNotes() {
+				document.getElementById('main_heading_1').textContent = 'Pinned Notes';
+				document.getElementById('main_heading_2').textContent = 'All Notes';
+
+				getUserNotes();
+			}
+
+			function showTasks() {
+				document.getElementById('main_heading_1').textContent = 'My Day';
+				document.getElementById('main_heading_2').textContent = 'All Tasks';
+
+				getUserTasks();
+			}
+
+			function updateNoteUI(cursor_value) {
+				document.getElementById('update_note_id').value = cursor_value.id;
+				// Get Latest Updates
+				var tx = db.transaction('notes', 'readonly');
+				var store = tx.objectStore('notes');
+				let req = store.get(cursor_value.id);
+
+				req.onsuccess = function (val) {
+					document.getElementById('update_note_pinned').value = cursor_value.pinned;
+					document.getElementById('update_note_createdAt').value = val.target.result.created;
+					document.getElementById('updateNoteModal_title').value = val.target.result.title;
+					document.getElementById('updateNoteModal_description').value =
+						val.target.result.description;
+					updateNoteModalInstance.open();
+					M.updateTextFields();
+					M.textareaAutoResize(document.getElementById('updateNoteModal_description'));
+					elems = document.querySelectorAll('select');
+					instances = M.FormSelect.init(elems, {});
+				};
+				tx.onerror = function (event) {
+					alert("Couldn't read Data. Check console for more details");
+					console.error('error reading note ' + event.target.errorCode);
+				};
+			}
+
+			function changeNotePin(_this) {
+				if (_this.src.includes('images/push_pin.svg'))
+					_this.src = 'images/push_pin_outline.svg';
+				else _this.src = 'images/push_pin.svg';
+			}
+
+			function sideNavClose_onClickSideNav() {
+				if (sideNavInstance) sideNavInstance.close();
+			}
+		</script>
+	</body>
+</html>

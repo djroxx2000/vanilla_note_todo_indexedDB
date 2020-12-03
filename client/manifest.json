@@ -1,0 +1,16 @@
+{
+  "name": "NoteTodoPWA",
+  "short_name": "Note/Todo",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "description": "A demo app for a fictional conference",
+  "theme_color": "#5f4a4b",
+  "icons": [
+    {
+      "src": "./images/note_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
